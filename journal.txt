@@ -1,0 +1,68 @@
+Struggles:
+
+1.
+    I managed to split the 81 cells into 9 3X3 by applying css 
+    every "value % 2 "
+
+    let addShift ="";
+        addShift += (colIndex % 3 === 2) &&  'right '
+        addShift += (rowIndex % 3 === 2) &&  'down'
+
+    where classname is className= {className + addShift}
+
+2. 
+    Had a problem where when i typed numbers into the cell, i coudln`t override the current number (wanted that the screen whould change live when i type the numbers), needed to click again and delete the current number.
+
+    i could use useState, but found another solution, i had the
+    cell display only the last digit of the number typed, so like that
+    if i spam numbers it will only show the last one,
+    and becouse i change the value every time it wont need to store a huge number, every time the number gets to 2 digits it will just splice it to the last digit.
+
+    
+       const handleChange = (row, col, e) => {
+            let n = Number(String(e.target.value).slice(-1))
+            if(n < 10 && initialGrid.current[row][col] === 0){
+                const newGrid = [...grid];
+                newGrid[row][col] = n;
+                setGrid(newGrid);
+            } 
+        }
+
+3. 
+    wanted so that when i click a number in the UI it`ll set it as the number on the last clicked cell.
+    to do that i created a state wich changes onClick when i click a cell, it stores the row and col into the "selecetedCell" state.
+
+4.
+    learned using "useeffect" and local storage so i could save data on refresh
+     
+    // loads last saved thing
+    useEffect(() =>{
+        const lastMove = localStorage.getItem('last Move');
+        const lastGrid = localStorage.getItem('last created grid');
+        
+
+            if (lastMove) {
+                setGrid(JSON.parse(lastMove))
+            }
+            if (lastGrid){
+                if(lastGrid !== 0){
+                    copyGrid(JSON.parse(lastGrid), initialGrid.current);
+                };
+            };     
+    }, []);
+
+    // saves every move
+    useEffect(() =>{
+            localStorage.setItem('last Move', JSON.stringify(grid));
+        // localStorage.setItem('last created grid', JSON.stringify(newGrid));
+    }, [grid]);
+
+    //save Created Grid
+    useEffect(() =>{
+            if (newGrid!==0){
+                localStorage.setItem('last created grid', JSON.stringify(newGrid));
+            }
+            
+    }, [newGrid]);
+
+     
